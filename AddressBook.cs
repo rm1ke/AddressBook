@@ -176,6 +176,36 @@ namespace TheAddressBook
         }
 
 
+        public List<Contact> GetBirthdaysThisMonth()
+        {
+            List<Contact> contacts = new List<Contact>();
+            string connectionString = _configuration.GetConnectionString("AddressBookDB");
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = "SELECT FirstName, LastName, Birthday FROM Contacts WHERE MONTH(Birthday) = MONTH(GETDATE())";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Contact contact = new Contact
+                            {
+                                FirstName = reader["FirstName"].ToString(),
+                                LastName = reader["LastName"].ToString(),
+                                Birthday = Convert.ToDateTime(reader["Birthday"])
+                            };
+                            contacts.Add(contact);
+                        }
+                    }
+                }
+            }
+            return contacts;
+        }
+
+
+
 
         //public void TestDatabaseConnection()
         //{

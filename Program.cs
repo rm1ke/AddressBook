@@ -36,7 +36,8 @@ namespace TheAddressBook
                 Console.WriteLine("4. Search by month");
                 Console.WriteLine("5. Update a contact");
                 Console.WriteLine("6. Delete a contact");
-                Console.WriteLine("7. Exit");
+                Console.WriteLine("7. Search for Birthdays this month");
+                Console.WriteLine("8. Exit");
                 Console.Write("Enter your choice: ");
                 string choice = Console.ReadLine();
 
@@ -114,6 +115,21 @@ namespace TheAddressBook
                         addressBook.DeleteContact(deleteFirstName, deleteLastName);
                         break;
                     case "7":
+                        List<Contact> birthdaysThisMonth = addressBook.GetBirthdaysThisMonth();
+                        if (birthdaysThisMonth.Count == 0)
+                        {
+                            Console.WriteLine("No birthdays this month.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Birthdays this month:");
+                            foreach (Contact contact in birthdaysThisMonth)
+                            {
+                                Console.WriteLine($"{contact.FirstName} {contact.LastName}: {contact.Birthday.ToString("yyyy-MM-dd")}");
+                            }
+                        }
+                        break;
+                    case "8":
                         Environment.Exit(0);
                         break;
                     default:
