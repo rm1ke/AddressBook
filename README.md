@@ -18,3 +18,4 @@ server and DB name
         "AddressBookDB": "Server={server name};Database={database name};Integrated Security=true;TrustServerCertificate=true"
     }
 }
+

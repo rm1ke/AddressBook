@@ -44,7 +44,7 @@ namespace TheAddressBook
             }
         }
 
-        // methods for search, update, delete will be added here
+
         public void DisplayContacts()
         {
             string connectionString = _configuration.GetConnectionString("AddressBookDB");
