@@ -11,6 +11,10 @@ using Microsoft.Data.SqlClient;
 using System.IO;
 
 
+
+
+
+
 namespace TheAddressBook
 {
     class Program
@@ -54,11 +58,29 @@ namespace TheAddressBook
                         {
                             Console.Write("Invalid date, please enter again (yyyy-mm-dd): ");
                         }
+                        Console.Write("Enter email: ");
+                        string email = Console.ReadLine();
+                        Console.Write("Enter Address: ");
+                        string address1 = Console.ReadLine();
+                        Console.Write("Apt or Building?: ");
+                        string address2 = Console.ReadLine();
+                        Console.Write("Enter City: ");
+                        string city = Console.ReadLine();
+                        Console.Write("Enter State: ");
+                        string state = Console.ReadLine();
+                        Console.Write("Enter ZipCode: ");
+                        string zip = Console.ReadLine();
                         Contact newContact = new Contact
                         {
                             FirstName = firstName,
                             LastName = lastName,
-                            Birthday = birthday
+                            Birthday = birthday,
+                            Email = email,
+                            Address1 = address1,
+                            Address2 = address2,
+                            City = city,
+                            State = state,
+                            Zip = zip
                         };
                         addressBook.AddContact(newContact);
                         Console.WriteLine("Contact added successfully.");
@@ -87,25 +109,68 @@ namespace TheAddressBook
                         string oldFirstName = Console.ReadLine();
                         Console.Write("Enter the last name of the contact you want to update: ");
                         string oldLastName = Console.ReadLine();
-                        Console.Write("Enter new first name: ");
-                        string updateFirstName = Console.ReadLine();
-                        Console.Write("Enter new last name: ");
-                        string updateLastName = Console.ReadLine();
-                        Console.Write("Enter new birthday (yyyy-mm-dd): ");
-                        DateTime updateBirthday;
-                        string birthdayInput = Console.ReadLine();
-                        while (!DateTime.TryParse(birthdayInput, out updateBirthday))
+
+                        Contact currentContact = addressBook.GetContact(oldFirstName, oldLastName);
+                        if (currentContact == null)
                         {
-                            Console.Write("Invalid date, please enter again (yyyy-mm-dd): ");
-                            birthdayInput = Console.ReadLine();
+                            Console.WriteLine("No contact found to update.");
+                            break;
                         }
-                        Contact updatedContact = new Contact
+
+                        // Ask user if they want to update the first name
+                        Console.Write("Update first name? (yes/no): ");
+                        if (Console.ReadLine().ToLower() == "yes")
                         {
-                            FirstName = updateFirstName,
-                            LastName = updateLastName,
-                            Birthday = updateBirthday
-                        };
-                        addressBook.UpdateContact(oldFirstName, oldLastName, updatedContact);
+                            Console.Write("Enter new first name: ");
+                            currentContact.FirstName = Console.ReadLine();
+                        }
+
+                        // Ask user if they want to update the last name
+                        Console.Write("Update last name? (yes/no): ");
+                        if (Console.ReadLine().ToLower() == "yes")
+                        {
+                            Console.Write("Enter new last name: ");
+                            currentContact.LastName = Console.ReadLine();
+                        }
+
+                        // Ask user if they want to update the birthday
+                        Console.Write("Update birthday? (yes/no): ");
+                        if (Console.ReadLine().ToLower() == "yes")
+                        {
+                            Console.Write("Enter new birthday (yyyy-mm-dd): ");
+                            DateTime updateBirthday;
+                            while (!DateTime.TryParse(Console.ReadLine(), out updateBirthday))
+                            {
+                                Console.Write("Invalid date, please enter again (yyyy-mm-dd): ");
+                            }
+                            currentContact.Birthday = updateBirthday;
+                        }
+
+                        // Ask user if they want to update the email
+                        Console.Write("Update email? (yes/no): ");
+                        if (Console.ReadLine().ToLower() == "yes")
+                        {
+                            Console.Write("Enter new email: ");
+                            currentContact.Email = Console.ReadLine();
+                        }
+
+                        // Ask user if they want to update the address
+                        Console.Write("Update address? (yes/no): ");
+                        if (Console.ReadLine().ToLower() == "yes")
+                        {
+                            Console.Write("Enter new Address 1: ");
+                            currentContact.Address1 = Console.ReadLine();
+                            Console.Write("Enter new Address 2: ");
+                            currentContact.Address2 = Console.ReadLine();
+                            Console.Write("Enter new City: ");
+                            currentContact.City = Console.ReadLine();
+                            Console.Write("Enter new State: ");
+                            currentContact.State = Console.ReadLine();
+                            Console.Write("Enter new Zip: ");
+                            currentContact.Zip = Console.ReadLine();
+                        }
+
+                        addressBook.UpdateContact(oldFirstName, oldLastName, currentContact);
                         break;
                     case "6":
                         Console.Write("Enter first name: ");
@@ -125,7 +190,29 @@ namespace TheAddressBook
                             Console.WriteLine("Birthdays this month:");
                             foreach (Contact contact in birthdaysThisMonth)
                             {
-                                Console.WriteLine($"{contact.FirstName} {contact.LastName}: {contact.Birthday.ToString("yyyy-MM-dd")}");
+                                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
+                                Console.WriteLine($"Birthday: {contact.Birthday?.ToString("yyyy-MM-dd")}");
+                                if (!string.IsNullOrEmpty(contact.Email))
+                                {
+                                    Console.WriteLine($"Email: {contact.Email}");
+                                }
+                                if (!string.IsNullOrEmpty(contact.Address1) || !string.IsNullOrEmpty(contact.Address2))
+                                {
+                                    Console.WriteLine($"Address: {contact.Address1} {contact.Address2}");
+                                }
+                                 if (!string.IsNullOrEmpty(contact.City))
+                                {
+                                    Console.WriteLine($"City: {contact.City}");
+                                }
+                                if (!string.IsNullOrEmpty(contact.State))
+                                {
+                                    Console.WriteLine($"State: {contact.State}");
+                                }
+                                if (!string.IsNullOrEmpty(contact.Zip))
+                                {
+                                    Console.WriteLine($"Zip: {contact.Zip}");
+                                }
+                                Console.WriteLine(new string('-', 20));  // Output a separator for readability
                             }
                         }
                         break;
@@ -142,7 +229,7 @@ namespace TheAddressBook
             }
 
 
-            // additional code for user interaction here
+           
         }
     }
 }
